@@ -1,0 +1,313 @@
+import java.util.Scanner;
+
+public class BinaryAndHexConverter {
+    private static Scanner scan = new Scanner(System.in);
+	public static void main(String[] args) {
+		
+		
+		printOptions();
+		System.out.print("Write the command:");
+		int command = scan.nextInt();
+		scan.nextLine();
+		while(command != 8)
+		{
+			if(command == 1)
+			{
+				System.out.print("Write the number:");
+				System.out.println("Binary result:" + longToBinary(scan.nextLong()));
+				System.out.println();
+				scan.nextLine();
+			}
+			else if(command == 2)
+			{
+				System.out.print("Write the binary sequence:");
+				System.out.println("Number result:" + binaryToLong(scan.nextLine()));
+				System.out.println();
+			}
+			else if(command == 3)
+			{
+				System.out.print("Write the phrase:");
+				System.out.println("Binary result:" + stringToBinary(scan.nextLine()));
+				System.out.println();
+			}
+			
+			else if(command == 4)
+			{
+				System.out.print("Write the binary sequence:");
+				System.out.println("String result:" + binaryToString(scan.nextLine()));
+				System.out.println();
+			}
+			else if(command == 5)
+			{
+				System.out.print("Write the number:");
+				System.out.println("Hexadecimal result:" + longToHexadecimal(scan.nextLong()));
+				System.out.println();
+				scan.nextLine();
+			}
+			else if(command == 6)
+			{
+				System.out.print("Write the number:");
+				System.out.println("Number result:" + hexadecimalToLong(scan.nextLine()));
+				System.out.println();
+			}
+			else if(command == 7)
+			{
+				System.out.print("Write the number:");
+				double number = scan.nextDouble();
+				System.out.print("Write the number of digits to display(fractional part):");
+				int digits = scan.nextInt();
+				scan.nextLine();
+				System.out.println("Binary result:" + (doubleToBinary(number,digits)));
+			}
+			System.out.print("Write the command:");
+			command = scan.nextInt();
+			scan.nextLine();
+			if(command == 8)
+			{
+				System.out.println("Exit");
+			}
+		}	
+	}
+	
+	private static void printOptions() {
+		System.out.println("1 - long --> binary");
+		System.out.println("2 - binary --> long");
+		System.out.println("3 - String --> binary");
+		System.out.println("4 - binary --> String");
+		System.out.println("5 - long --> hexadecimal");
+		System.out.println("6 - hexadecimal --> long");
+		System.out.println("7 - double --> binary");
+		System.out.println("8 - exit program");
+	}
+	
+	private static String longToHexadecimal(long number) {
+		String hexNumber = "";
+		String reversed = "";
+		while(number > 0)
+		{
+			if(number % 16 == 10)
+			{
+				hexNumber += "A";
+			}
+			else if(number % 16 == 11)
+			{
+				hexNumber += "B";
+			}
+			else if(number % 16 == 12)
+			{
+				hexNumber += "C";
+			}
+			else if(number % 16 == 13)
+			{
+				hexNumber += "D";
+			}
+			else if(number % 16 == 14)
+			{
+				hexNumber += "E";
+			}
+			else if(number % 16 == 15)
+			{
+				hexNumber += "F";
+			}
+			else
+			{
+				hexNumber += number % 16;
+			}
+			number /= 16;
+		}
+		for(int i = hexNumber.length() - 1; i >= 0; i--)
+		{
+			reversed += hexNumber.charAt(i);
+		}
+		return reversed;
+	}
+	
+	private static String binaryToString(String input) {
+		String[] binarySequence = input.split(" ");
+		String binaryChar = "";
+		boolean isOne = false;
+		long binaryToIntValue = 0;
+		String finalString = "";
+		for(int i = 0; i < binarySequence.length; i++)
+		{
+			for(int j = 0; j < binarySequence[i].length(); j++)
+			{
+				if(binarySequence[i].charAt(j) == ('1') && !isOne)
+				{
+					isOne = true;
+					binaryChar += binarySequence[i].charAt(j);
+				}
+				else if(binarySequence[i].charAt(j) == ('1') || 
+						binarySequence[i].charAt(j) == ('0') && isOne)
+				{
+					binaryChar += binarySequence[i].charAt(j);
+				}
+			}
+			binaryToIntValue = (binaryToLong(binaryChar));
+			binaryChar = "";
+			finalString += (char)binaryToIntValue;
+			isOne = false;
+		}
+		return finalString;
+	}
+	
+	private static String stringToBinary(String input) {
+		String binaryString = "";
+		char symbol = ' ';
+		for(int i = 0; i < input.length(); i++)
+		{
+			symbol = input.charAt(i);
+			if(longToBinary(symbol).length() == 8)
+			{
+				if(i < input.length() - 1)
+				{
+					binaryString += longToBinary(symbol) + " ";
+				}
+				else
+				{
+					binaryString += longToBinary(symbol);
+				}
+			}
+			else if(longToBinary(symbol).length() < 8)
+			{
+				for(int j = 0; j < 8 - longToBinary(symbol).length(); j++)
+				{
+					binaryString += "0";
+				}
+				if(i < input.length() - 1)
+				{
+					binaryString += longToBinary(symbol) + " ";
+				}
+				else
+				{
+					binaryString += longToBinary(symbol);
+				}
+			}
+		}
+		return binaryString;
+	}
+	
+	private static String longToBinary(long number) {
+		String binary = "";
+		String reversed = "";
+		if(number == 0)
+		{
+			return "0";
+		}
+		while(number > 0)
+		{
+			binary += number % 2;
+			number /= 2;
+		}
+		for(int i = binary.length() - 1; i >= 0; i--)
+		{
+			reversed += binary.charAt(i);
+		}
+		return reversed;
+	}
+
+	private static long binaryToLong(String binary) {
+		long number = 0;
+		  int increment = 0;
+		  long powerOfTwo = 1;
+		  
+		  for(int i = binary.length() - 1; i >= 0; i--)
+		  {
+			  if(increment == 0 && binary.charAt(i) == '1')
+			  {
+				  number += 1;
+			  }
+			  else if(binary.charAt(i) == '1')
+			  {
+				  for(int j = 0; j < increment; j++)
+				  {
+					  powerOfTwo *= 2;
+				  }
+				  number += powerOfTwo; 
+			  }
+			  increment++;
+			  powerOfTwo = 1;
+		  }
+		  return number;
+	}
+
+	private static String doubleToBinary(double number,int digits) {
+
+	    String binaryResult = "";
+		double decimalPart = number - Math.floor(number);
+		int wholeValue = (int)(number - decimalPart);
+		String binaryResultInt = longToBinary(wholeValue) + ".";
+		while(decimalPart > 0)
+		{
+			decimalPart *= 2;
+			if(decimalPart < 1)
+			{
+				binaryResult += "0";
+			}
+			else
+			{
+				binaryResult += "1";
+				decimalPart -= 1;
+			}
+		}
+		if(digits > binaryResult.length())
+		{
+			digits = digits -(digits - binaryResult.length());
+		}
+        return (binaryResultInt + binaryResult.substring(0,digits));
+	}
+
+	private static long hexadecimalToLong(String hex) {
+		int powerRaise = hex.length() - 1;
+		long power = 1;
+		long value = 0;
+		int digit = 0;
+		for(int i = 0; i < hex.length(); i++)
+		{
+			if(Character.isDigit(hex.charAt(i)))
+			{
+				digit = Integer.parseInt("" + hex.charAt(i));
+			}
+			else if(hex.charAt(i) == 'A' || hex.charAt(i) == 'a')
+			{
+			    digit = 10;
+			}
+			else if(hex.charAt(i) == 'B' || hex.charAt(i) == 'b')
+			{
+			    digit = 11;
+			}
+			else if(hex.charAt(i) == 'C' || hex.charAt(i) == 'c')
+			{
+			    digit = 12;
+			}
+			else if(hex.charAt(i) == 'D' || hex.charAt(i) == 'd')
+			{
+			    digit = 13;
+			}
+			else if(hex.charAt(i) == 'E' || hex.charAt(i) == 'e')
+			{
+			    digit = 14;
+			}
+			else if(hex.charAt(i) == 'F' || hex.charAt(i) == 'f')
+			{
+			    digit = 15;
+			}
+			if(powerRaise == 0)
+			{
+				power = 1;
+			}
+			else if(powerRaise != 0)
+			{
+				for(int j = powerRaise; j > 0; j--)
+				{
+				  power *= 16;	
+				}
+			}
+			value += power * digit;
+			power = 1;
+			powerRaise--;
+		}
+		return value;
+	}
+	
+}
